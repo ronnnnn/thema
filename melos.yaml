@@ -1,0 +1,22 @@
+name: thema
+
+packages:
+  - ./
+  - packages/**
+
+ide:
+  intellij: true
+
+
+command:
+  bootstrap:
+    enforceLockfile: true
+  clean:
+    hooks:
+      post: |
+        melos exec -c 1 --flutter -- flutter clean
+
+scripts:
+  get:
+    run: melos exec -c 1 -- flutter pub get
+    description: Pub get
