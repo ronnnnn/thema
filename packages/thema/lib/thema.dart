@@ -105,13 +105,12 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro {
         '    return $constructorName(\n',
         ...(await Future.wait(fields.map((field) async {
           final fieldName = field.identifier.name;
-          final fieldType = field.type as NamedTypeAnnotation;
-          final fieldTypeIdentifier = fieldType.identifier;
+          final fieldTypeCode = field.type.code;
 
             return DeclarationCode.fromParts(
               [
                 '$fieldName: ',
-                NamedTypeAnnotationCode(name: fieldTypeIdentifier),
+                fieldTypeCode,
                 '.lerp(this.$fieldName, other.$fieldName, t)!',
               ],
             );
