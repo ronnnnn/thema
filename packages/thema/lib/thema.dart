@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:macros/macros.dart';
 
 final _flutterMaterial = Uri.parse('package:flutter/material.dart');
+final _dartCore = Uri.parse('dart:core');
 
 macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro {
   const Thema();
@@ -40,9 +41,10 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro {
     );
     builder.declareInType(constructorCode);
 
-    final copyWithReturnType = await builder.resolveIdentifier(_flutterMaterial, 'ThemeExtension');
+    final themeExtensionIdentifier = await builder.resolveIdentifier(_flutterMaterial, 'ThemeExtension');
+
     final copyWithReturnTypeCode = NamedTypeAnnotationCode(
-        name: copyWithReturnType,
+        name: themeExtensionIdentifier,
         typeArguments: [
           RawTypeAnnotationCode.fromString(clazz.identifier.name),
         ],
@@ -60,19 +62,74 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro {
       );
     },
     ).toList();
+    final copyWithFunctionBodyCode = FunctionBodyCode.fromParts([
+        '    return $constructorName(\n',
+        ...instiatePareterCodes.joinAsCode(',\n'),
+        '    );\n',
+    ]);
     final copyWithFunctionCode = DeclarationCode.fromParts(
       [
         '  ',
         copyWithReturnTypeCode,
-        'copyWith({\n',
+        ' copyWith({\n',
         ...copyWithParameterCodes.joinAsCode(',\n'),
         '  }) {\n',
-        '    return $constructorName(\n',
-        ...instiatePareterCodes.joinAsCode(',\n'),
-        '    );\n',
+        copyWithFunctionBodyCode,
         '  }',
       ],
     );
     builder.declareInType(copyWithFunctionCode);
+
+    final leapReturnTypeCode = NamedTypeAnnotationCode(
+        name: themeExtensionIdentifier,
+        typeArguments: [
+          RawTypeAnnotationCode.fromString(constructorName),
+        ],
+      );
+    final doubleIdentifier = await builder.resolveIdentifier(_dartCore, 'double');
+    final leapParameterCodes = [
+      ParameterCode(
+        keywords: ['covariant'],
+        type: NullableTypeAnnotationCode(leapReturnTypeCode),
+        name: 'other',
+      ),
+      ParameterCode(
+        type: NamedTypeAnnotationCode(name: doubleIdentifier),
+        name: 't',
+      ),
+    ].toList();
+    final leapFunctionBodyCode = FunctionBodyCode.fromParts([
+        '    if (other is! $constructorName) {\n',
+        '      return this;\n',
+        '    }\n',
+        '    return $constructorName(\n',
+        ...(await Future.wait(fields.map((field) async {
+          final fieldName = field.identifier.name;
+          final fieldType = field.type as NamedTypeAnnotation;
+          final fieldTypeIdentifier = fieldType.identifier;
+
+            return DeclarationCode.fromParts(
+              [
+                '$fieldName: ',
+                NamedTypeAnnotationCode(name: fieldTypeIdentifier),
+                '.lerp(this.$fieldName, other.$fieldName, t)!',
+              ],
+            );
+        }).toList())).joinAsCode(',\n'),
+        '    );\n',
+    ]);
+    final leapFunctionCode = DeclarationCode.fromParts(
+      [
+        '  ',
+        leapReturnTypeCode,
+        ' lerp(',
+        ...leapParameterCodes.joinAsCode(',\n'),
+        ') {\n',
+        leapFunctionBodyCode,
+        '  }',
+      ],
+    );
+
+    builder.declareInType(leapFunctionCode);
   }
 }
