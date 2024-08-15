@@ -80,26 +80,23 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro {
     );
     builder.declareInType(copyWithFunctionCode);
 
-    final leapReturnTypeCode = NamedTypeAnnotationCode(
-        name: themeExtensionIdentifier,
-        typeArguments: [
-          RawTypeAnnotationCode.fromString(constructorName),
-        ],
-      );
+    final leapReturnTypeCode = NamedTypeAnnotationCode(name: clazz.identifier);
     final doubleIdentifier = await builder.resolveIdentifier(_dartCore, 'double');
+    final leapFirstParameterCode = ParameterCode(
+      keywords: ['covariant'],
+      type: NullableTypeAnnotationCode(leapReturnTypeCode),
+      name: 'other',
+    );
+    final leapSecondParameterCode = ParameterCode(
+      type: NamedTypeAnnotationCode(name: doubleIdentifier),
+      name: 't',
+    );
     final leapParameterCodes = [
-      ParameterCode(
-        keywords: ['covariant'],
-        type: NullableTypeAnnotationCode(leapReturnTypeCode),
-        name: 'other',
-      ),
-      ParameterCode(
-        type: NamedTypeAnnotationCode(name: doubleIdentifier),
-        name: 't',
-      ),
+      leapFirstParameterCode,
+      leapSecondParameterCode,
     ].toList();
     final leapFunctionBodyCode = FunctionBodyCode.fromParts([
-        '    if (other is! $constructorName) {\n',
+        '    if (${leapFirstParameterCode.name} == null) {\n',
         '      return this;\n',
         '    }\n',
         '    return $constructorName(\n',
@@ -107,13 +104,24 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro {
           final fieldName = field.identifier.name;
           final fieldTypeCode = field.type.code;
 
+          final fieldStaticType = await builder.resolve(fieldTypeCode);
+          final themeExtensionStaticType = await builder.resolve(NamedTypeAnnotationCode(name: themeExtensionIdentifier));
+          if (await fieldStaticType.isSubtypeOf(themeExtensionStaticType)) {
             return DeclarationCode.fromParts(
               [
                 '$fieldName: ',
-                fieldTypeCode,
-                '.lerp(this.$fieldName, other.$fieldName, t)!',
+                'this.$fieldName.lerp(${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})',
               ],
             );
+          }
+
+          return DeclarationCode.fromParts(
+            [
+              '$fieldName: ',
+              fieldTypeCode,
+              '.lerp(this.$fieldName, ${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})!',
+            ],
+          );
         }).toList())).joinAsCode(',\n'),
         '    );\n',
     ]);

@@ -26,14 +26,27 @@ class ColorThemeExt {
   final Color primaryColor;
   final Color secondaryColor;
   final Color accentColor;
+}
 
+@Thema()
+class TextStyleThemeExt {
   final TextStyle primaryTextStyle;
   final TextStyle secondaryTextStyle;
   final TextStyle accentTextStyle;
+}
 
+@Thema()
+class GradientColorThemeExt {
   final GradientColor primaryGradient;
   final GradientColor secondaryGradient;
   final GradientColor accentGradient;
+}
+
+@Thema()
+class AppThemeExt {
+  final ColorThemeExt color;
+  final TextStyleThemeExt textStyle;
+  final GradientColorThemeExt gradientColor;
 }
 
 class GradientColor {
