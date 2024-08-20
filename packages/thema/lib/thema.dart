@@ -46,18 +46,19 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro, ClassDefin
   }) async {
     final fields = await builder.fieldsOf(clazz);
     final constructorParameterCodes = fields.map((field) =>
-     ParameterCode(
-      keywords: ['required'],
-      name: "this.${field.identifier.name}",
-    ),
+      RawCode.fromParts([
+          'required',
+          ' ',
+          field.identifier,
+      ])
     ).toList();
     final constructorName = clazz.identifier.name;
     final constructorCode = DeclarationCode.fromParts(
       [
-        '  const $constructorName({\n',
-        ...constructorParameterCodes.joinAsCode(',\n'),
-        '  });',
-      ],
+        'const $constructorName({'.indent(),
+        ...constructorParameterCodes.trailingComma().indent(size: 4),
+        '});'.indent(),
+      ].joinAsCode('\n'),
     );
     builder.declareInType(constructorCode);
   }
@@ -67,27 +68,22 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro, ClassDefin
     required MemberDeclarationBuilder builder,
   }) async {
     final fields = await builder.fieldsOf(clazz);
-    final themeExtensionIdentifier = await builder.resolveIdentifier(_flutterMaterial, 'ThemeExtension');
-    final copyWithReturnTypeCode = NamedTypeAnnotationCode(
-        name: themeExtensionIdentifier,
-        typeArguments: [
-          RawTypeAnnotationCode.fromString(clazz.identifier.name),
-        ],
-      );
     final copyWithParameterCodes = fields.map((field) =>
-     ParameterCode(
-      type: NullableTypeAnnotationCode(field.type.code),
-      name: field.identifier.name,
-    ),
+      ParameterCode(
+        type: NullableTypeAnnotationCode(field.type.code),
+        name: field.identifier.name,
+      ),
     ).toList();
     final copyWithFunctionCode = DeclarationCode.fromParts(
       [
-        '  ',
-        copyWithReturnTypeCode,
-        ' copyWith({\n',
-        ...copyWithParameterCodes.joinAsCode(',\n'),
-        '  });',
-      ],
+        RawCode.fromParts([
+          clazz.identifier,
+          ' ',
+          'copyWith({'
+        ]).indent(),
+        ...copyWithParameterCodes.trailingComma().indent(size: 4),
+        '});'.indent(),
+      ].joinAsCode('\n'),
     );
     builder.declareInType(copyWithFunctionCode);
   }
@@ -96,11 +92,12 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro, ClassDefin
     required ClassDeclaration clazz,
     required MemberDeclarationBuilder builder,
   }) async {
-    final leapReturnTypeCode = NamedTypeAnnotationCode(name: clazz.identifier);
     final doubleIdentifier = await builder.resolveIdentifier(_dartCore, 'double');
     final leapFirstParameterCode = ParameterCode(
       keywords: ['covariant'],
-      type: NullableTypeAnnotationCode(leapReturnTypeCode),
+      type: NullableTypeAnnotationCode(
+        NamedTypeAnnotationCode(name: clazz.identifier),
+      ),
       name: 'other',
     );
     final leapSecondParameterCode = ParameterCode(
@@ -113,12 +110,14 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro, ClassDefin
     ].toList();
     final leapFunctionCode = DeclarationCode.fromParts(
       [
-        '  ',
-        leapReturnTypeCode,
-        ' lerp(',
-        ...leapParameterCodes.joinAsCode(',\n'),
-        ');',
-      ],
+        RawCode.fromParts([
+          clazz.identifier,
+          ' ',
+          'lerp(',
+        ]).indent(),
+        ...leapParameterCodes.trailingComma().indent(size: 4),
+        ');'.indent(),
+      ].joinAsCode('\n'),
     );
     builder.declareInType(leapFunctionCode);
   }
@@ -132,21 +131,29 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro, ClassDefin
     if (copyWithDeclaration == null) return;
 
     final fields = await typeDefinisionBuilder.fieldsOf(clazz);
-    final instiatePareterCodes = fields.map((field) {
+    final instancePareterCodes = fields.map((field) {
       final fieldName = field.identifier.name;
-      return DeclarationCode.fromString(
-        '$fieldName: $fieldName ?? this.$fieldName',
-      );
+      return RawCode.fromParts([
+        '$fieldName:',
+        ' '
+        '$fieldName',
+        ' ?? ',
+        field.identifier,
+      ]);
     },
     ).toList();
-    final constructorName = clazz.identifier.name;
     final copyWithFunctionBodyCode = FunctionBodyCode.fromParts([
-        '  {\n',
-        '    return $constructorName(\n',
-        ...instiatePareterCodes.joinAsCode(',\n'),
-        '    );\n',
-        '  }',
-    ]);
+        '{'.indent(),
+        RawCode.fromParts([
+          'return',
+          ' ',
+          clazz.identifier,
+          '(',
+        ]).indent(size: 2),
+        ...instancePareterCodes.trailingComma().indent(size: 6),
+        ');'.indent(size: 4),
+        '}'.indent(),
+    ].joinAsCode('\n'));
 
     final builder = await typeDefinisionBuilder.buildMethod(copyWithDeclaration.identifier);
     builder.augment(copyWithFunctionBodyCode);
@@ -172,42 +179,73 @@ macro class Thema implements ClassTypesMacro, ClassDeclarationsMacro, ClassDefin
       type: NamedTypeAnnotationCode(name: doubleIdentifier),
       name: 't',
     );
-    final constructorName = clazz.identifier.name;
     final fields = await typeDefinisionBuilder.fieldsOf(clazz);
+    final instancePareterCodes = await Future.wait(fields.map((field) async {
+      final fieldName = field.identifier.name;
+      final fieldTypeCode = field.type.code;
+      final fieldStaticType = await typeDefinisionBuilder.resolve(fieldTypeCode);
+      final themeExtensionStaticType = await typeDefinisionBuilder.resolve(NamedTypeAnnotationCode(name: themeExtensionIdentifier));
+      if (await fieldStaticType.isSubtypeOf(themeExtensionStaticType)) {
+        return RawCode.fromParts(
+          [
+            '$fieldName:',
+            ' ',
+            field.identifier,
+            '.lerp(${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})',
+          ],
+        );
+      }
+
+      return RawCode.fromParts(
+        [
+          '$fieldName: ',
+          fieldTypeCode,
+          '.lerp(',
+          field.identifier,
+          ', ${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})!',
+        ],
+      );
+    }));
     final leapFunctionBodyCode = FunctionBodyCode.fromParts([
-        '  {\n',
-        '    if (${leapFirstParameterCode.name} == null) {\n',
-        '      return this;\n',
-        '    }\n',
-        '    return $constructorName(\n',
-        ...(await Future.wait(fields.map((field) async {
-          final fieldName = field.identifier.name;
-          final fieldTypeCode = field.type.code;
-
-          final fieldStaticType = await typeDefinisionBuilder.resolve(fieldTypeCode);
-          final themeExtensionStaticType = await typeDefinisionBuilder.resolve(NamedTypeAnnotationCode(name: themeExtensionIdentifier));
-          if (await fieldStaticType.isSubtypeOf(themeExtensionStaticType)) {
-            return DeclarationCode.fromParts(
-              [
-                '$fieldName: ',
-                'this.$fieldName.lerp(${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})',
-              ],
-            );
-          }
-
-          return DeclarationCode.fromParts(
-            [
-              '$fieldName: ',
-              fieldTypeCode,
-              '.lerp(this.$fieldName, ${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})!',
-            ],
-          );
-        }).toList())).joinAsCode(',\n'),
-        '    );\n',
-        '  }',
-    ]);
+        '{',
+        RawCode.fromParts([
+          'if (${leapFirstParameterCode.name} == null) {'.indent(),
+          'return this;'.indent(size: 4),
+          '}'.indent(),
+        ].joinAsCode('\n')),
+        RawCode.fromParts([
+          'return',
+          ' ',
+          clazz.identifier,
+          '('
+        ]).indent(),
+        ...instancePareterCodes.trailingComma().indent(size: 6),
+        ');'.indent(size: 4),
+        '}'.indent(),
+    ].joinAsCode('\n'));
 
     final builder = await typeDefinisionBuilder.buildMethod(leapDeclaration.identifier);
     builder.augment(leapFunctionBodyCode);
+  }
+}
+
+extension _Indent<T extends Object> on T {
+  Code indent({int size = 2}) {
+    return RawCode.fromParts([
+      ' ' * size,
+      this,
+    ]);
+  }
+}
+
+extension _Indents<T extends Object> on List<T> {
+  List<Code> indent({int size = 2}) {
+    return this.map((element) => element.indent(size: size)).toList();
+  }
+}
+
+extension _Commas<T extends Object> on List<T> {
+  List<Code> trailingComma() {
+    return this.map((element) => RawCode.fromParts([element, ','])).toList();
   }
 }
