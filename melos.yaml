@@ -20,3 +20,7 @@ scripts:
   get:
     run: melos exec -c 1 -- flutter pub get
     description: Pub get
+
+  fmt:
+    run: melos exec -c 1 -- dart format --enable-experiment=macros  .
+    description: Format dart code
