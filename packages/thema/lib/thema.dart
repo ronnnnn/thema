@@ -180,21 +180,21 @@ macro class Thema
         final fieldName = field.identifier.name;
         return RawCode.fromParts([
           '$fieldName:',
-          ' '
-              '$fieldName',
+          ' ',
+          '$fieldName',
           ' ?? ',
           field.identifier,
         ]);
       },
     ).toList();
     final copyWithFunctionBodyCode = FunctionBodyCode.fromParts([
-      '{'.indent(),
+      '{',
       RawCode.fromParts([
         'return',
         ' ',
         clazz.identifier,
         '(',
-      ]).indent(size: 2),
+      ]).indent(size: 4),
       ...instancePareterCodes.trailingComma().indent(size: 6),
       ');'.indent(size: 4),
       '}'.indent(),
@@ -260,11 +260,11 @@ macro class Thema
     final leapFunctionBodyCode = FunctionBodyCode.fromParts([
       '{',
       RawCode.fromParts([
-        'if (${leapFirstParameterCode.name} == null) {'.indent(),
-        'return this;'.indent(size: 4),
-        '}'.indent(),
+        'if (${leapFirstParameterCode.name} == null) {'.indent(size: 4),
+        'return this;'.indent(size: 6),
+        '}'.indent(size: 4),
       ].joinAsCode('\n')),
-      RawCode.fromParts(['return', ' ', clazz.identifier, '(']).indent(),
+      RawCode.fromParts(['return', ' ', clazz.identifier, '(']).indent(size: 4),
       ...instancePareterCodes.trailingComma().indent(size: 6),
       ');'.indent(size: 4),
       '}'.indent(),
