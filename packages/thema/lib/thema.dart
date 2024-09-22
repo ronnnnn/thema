@@ -229,34 +229,36 @@ macro class Thema
       name: 't',
     );
     final fields = await typeDefinisionBuilder.fieldsOf(clazz);
-    final instancePareterCodes = await Future.wait(fields.map((field) async {
-      final fieldName = field.identifier.name;
-      final fieldTypeCode = field.type.code;
-      final fieldStaticType =
-          await typeDefinisionBuilder.resolve(fieldTypeCode);
-      final themeExtensionStaticType = await typeDefinisionBuilder
-          .resolve(NamedTypeAnnotationCode(name: themeExtensionIdentifier));
-      if (await fieldStaticType.isSubtypeOf(themeExtensionStaticType)) {
+    final instancePareterCodes = await Future.wait(
+      fields.map((field) async {
+        final fieldName = field.identifier.name;
+        final fieldTypeCode = field.type.code;
+        final fieldStaticType =
+            await typeDefinisionBuilder.resolve(fieldTypeCode);
+        final themeExtensionStaticType = await typeDefinisionBuilder
+            .resolve(NamedTypeAnnotationCode(name: themeExtensionIdentifier));
+        if (await fieldStaticType.isSubtypeOf(themeExtensionStaticType)) {
+          return RawCode.fromParts(
+            [
+              '$fieldName:',
+              ' ',
+              field.identifier,
+              '.lerp(${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})',
+            ],
+          );
+        }
+
         return RawCode.fromParts(
           [
-            '$fieldName:',
-            ' ',
+            '$fieldName: ',
+            fieldTypeCode,
+            '.lerp(',
             field.identifier,
-            '.lerp(${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})',
+            ', ${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})!',
           ],
         );
-      }
-
-      return RawCode.fromParts(
-        [
-          '$fieldName: ',
-          fieldTypeCode,
-          '.lerp(',
-          field.identifier,
-          ', ${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})!',
-        ],
-      );
-    }));
+      }),
+    );
     final leapFunctionBodyCode = FunctionBodyCode.fromParts([
       '{',
       RawCode.fromParts([
@@ -264,7 +266,12 @@ macro class Thema
         'return this;'.indent(size: 6),
         '}'.indent(size: 4),
       ].joinAsCode('\n')),
-      RawCode.fromParts(['return', ' ', clazz.identifier, '(']).indent(size: 4),
+      RawCode.fromParts([
+        'return',
+        ' ',
+        clazz.identifier,
+        '(',
+      ]).indent(size: 4),
       ...instancePareterCodes.trailingComma().indent(size: 6),
       ');'.indent(size: 4),
       '}'.indent(),

@@ -24,3 +24,7 @@ scripts:
   fmt:
     run: melos exec -c 1 -- dart format --enable-experiment=macros  .
     description: Format dart code
+
+  fix:
+    run: melos exec -c 1 -- dart fix --apply --enable-experiment=macros .
+    description: Fix dart code
