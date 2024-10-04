@@ -1,10 +1,55 @@
+import 'package:flutter/material.dart';
+import 'package:thema/thema.dart';
+
 import 'dart:collection';
 
-import 'package:flutter/material.dart';
-
-// WORKAROUND:
-// Separate file from main.dart.
+// TODO: Implement tests after the issue is resolved.
 // https://github.com/dart-lang/sdk/issues/55910
+void main() {
+  // test('Color', () {
+  //   final primaryColor = Colors.red;
+  //   final secondaryColor = Colors.green;
+  //   final accentColor = Colors.blue;
+
+  //   final theme = ColorThemeExt(
+  //     primaryColor: primaryColor,
+  //     secondaryColor: secondaryColor,
+  //     accentColor: accentColor,
+  //   );
+
+  //   expect(theme.primaryColor, equals(primaryColor));
+  //   expect(theme.secondaryColor, equals(secondaryColor));
+  //   expect(theme.accentColor, equals(accentColor));
+  // });
+}
+
+@Thema()
+class ColorThemeExt {
+  final Color primaryColor;
+  final Color secondaryColor;
+  final Color accentColor;
+}
+
+@Thema()
+class TextStyleThemeExt {
+  final TextStyle primaryTextStyle;
+  final TextStyle secondaryTextStyle;
+  final TextStyle accentTextStyle;
+}
+
+@Thema()
+class GradientColorThemeExt {
+  final GradientColor primaryGradient;
+  final GradientColor secondaryGradient;
+  final GradientColor accentGradient;
+}
+
+@Thema()
+class AppThemeExt {
+  final ColorThemeExt color;
+  final TextStyleThemeExt textStyle;
+  final GradientColorThemeExt gradientColor;
+}
 
 class GradientColor {
   const GradientColor({

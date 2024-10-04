@@ -32,3 +32,9 @@ scripts:
   fix:
     run: melos exec -c 1 -- dart fix --apply --enable-experiment=macros .
     description: Fix dart code
+
+  test:
+    run: melos exec -c 1 -- flutter test --enable-experiment=macros
+    description: Run tests
+    packageFilters:
+      dependsOn: flutter_test
