@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run example app",
+      "program": "${workspaceFolder}/packages/thema/example/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--enable-experiment=macros"]
+    }
+  ]
+}

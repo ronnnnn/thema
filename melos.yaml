@@ -21,6 +21,10 @@ scripts:
     run: melos exec -c 1 -- flutter pub get
     description: Pub get
 
+  outdated:
+    run: melos exec -c 1 -- flutter pub outdated
+    description: Check for outdated dependencies
+
   fmt:
     run: melos exec -c 1 -- dart format --enable-experiment=macros  .
     description: Format dart code

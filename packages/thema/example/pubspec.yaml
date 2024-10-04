@@ -1,0 +1,12 @@
+name: thema_example
+publish_to: "none"
+version: 1.0.0
+
+environment:
+  sdk: ">=3.6.0-0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  thema:
+    path: ..

@@ -1,53 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:json/json.dart';
-import 'package:thema/thema.dart';
-
-void main() {
-  // Given some arbitrary JSON:
-  var userJson = {'age': 5, 'name': 'Roger', 'username': 'roger1337'};
-
-  // Use the generated members:
-  var user = User.fromJson(userJson);
-  print(user);
-  print(user.toJson());
-}
-
-@JsonCodable()
-class User {
-  final int? age;
-  final String name;
-  final String username;
-}
-
-@Thema()
-class ColorThemeExt {
-  final Color primaryColor;
-  final Color secondaryColor;
-  final Color accentColor;
-}
-
-@Thema()
-class TextStyleThemeExt {
-  final TextStyle primaryTextStyle;
-  final TextStyle secondaryTextStyle;
-  final TextStyle accentTextStyle;
-}
-
-@Thema()
-class GradientColorThemeExt {
-  final GradientColor primaryGradient;
-  final GradientColor secondaryGradient;
-  final GradientColor accentGradient;
-}
-
-@Thema()
-class AppThemeExt {
-  final ColorThemeExt color;
-  final TextStyleThemeExt textStyle;
-  final GradientColorThemeExt gradientColor;
-}
 
 class GradientColor {
   const GradientColor({
