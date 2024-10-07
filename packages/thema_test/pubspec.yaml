@@ -1,0 +1,16 @@
+name: thema_test
+description: A new Flutter module project.
+publish_to: 'none'
+
+environment:
+  sdk: ">=3.6.0-0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  thema:
+    path: ../thema
+  flutter_test:
+    sdk: flutter
