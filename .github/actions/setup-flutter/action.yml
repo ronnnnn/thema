@@ -13,7 +13,6 @@ runs:
         # channel: stable
         channel: master
         # flutter-version: ${{ steps.versions.outputs.flutter }}
-        flutter-version: 3.26.0-1.0.pre
         cache: true
     - name: Extract Melos version from pubspec
       id: version
