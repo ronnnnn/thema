@@ -15,7 +15,7 @@ thema reduces the boilerplate code required to create ThemeExtension classes wit
 </div>
 
 > [!CAUTION]
-> This package is experimental because [the Dart macro system][macro-spec] is currently under development.
+> This package is experimental because [the Dart macro system][macro-spec] is currently under development.<br>
 > DO NOT USE on production codes.
 
 [macro-spec]: https://github.com/dart-lang/language/blob/main/working/macros/feature-specification.md
