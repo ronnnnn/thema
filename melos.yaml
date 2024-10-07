@@ -7,7 +7,6 @@ packages:
 ide:
   intellij: true
 
-
 command:
   bootstrap:
     enforceLockfile: true
