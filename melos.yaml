@@ -1,5 +1,11 @@
 name: thema
 
+repository:
+  type: github
+  origin: https://github.com/ronnnnn/thema
+  owner: ronnnnn
+  name: thema
+
 packages:
   - ./
   - packages/**
@@ -16,24 +22,62 @@ command:
         melos exec -c 1 --flutter -- flutter clean
 
 scripts:
+  prepare:
+    description: Prepare for develop
+    run: dart pub global activate very_good_cli 0.23.1
+
   get:
-    run: melos exec -c 1 -- flutter pub get
     description: Pub get
+    run: melos exec -c 1 -- flutter pub get
 
   outdated:
-    run: melos exec -c 1 -- flutter pub outdated
     description: Check for outdated dependencies
+    run: melos exec -c 1 -- flutter pub outdated
 
   fmt:
-    run: melos exec -c 1 -- dart format --enable-experiment=macros  .
-    description: Format dart code
+    description: format
+    run: |
+      melos fix && \
+      melos fmt:dart
+
+  fmt:dry:
+    description: format (dry-run)
+    run: |
+      melos fix:dry && \
+      melos fmt:dart:dry
+
+  fmt:dart:
+    description: format dart
+    run: melos exec -c 1 --fail-fast -- dart format --enable-experiment=macros .
+
+  fmt:dart:dry:
+    description: format dart (dry-run)
+    run: melos exec -c 1 --fail-fast -- dart format --set-exit-if-changed --enable-experiment=macros .
 
   fix:
-    run: melos exec -c 1 -- dart fix --apply --enable-experiment=macros .
-    description: Fix dart code
+    description: fix dart
+    run: melos exec -c 1 --fail-fast -- dart fix --apply --enable-experiment=macros
+
+  fix:dry:
+    description: fix dart (dry-run)
+    run: melos exec -c 1 --fail-fast -- dart fix --dry-run --enable-experiment=macros
 
   test:
-    run: melos exec -c 1 -- flutter test --enable-experiment=macros
     description: Run tests
+    exec: very_good test
     packageFilters:
       dependsOn: flutter_test
+
+  build:example:
+    description: build on thema_example
+    run: |
+      melos build:example:android && \
+      melos build:example:ios
+
+  build:example:android:
+    description: build android on thema_example
+    run: melos exec -c 1 --scope="thema_example" -- flutter build appbundle
+
+  build:example:ios:
+    description: build ios on thema_example
+    run: melos exec -c 1 --scope="thema_example" -- flutter build ios --no-codesign

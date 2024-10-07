@@ -1,0 +1,23 @@
+name: Setup Java 🔧
+description: Download and cache tools for Java
+
+runs:
+  using: 'composite'
+  steps:
+    # - name: Import .tool-versions
+    #   uses: wasabeef/import-asdf-tool-versions-action@2049f3fd1a331dc40d2eda76c614c9bd7f1a502d # v1.0.3
+    #   id: asdf
+    # - name: Extract distribution and version
+    #   id: extract_distribution_and_version
+    #   shell: bash
+    #   run: |
+    #     java=${{ steps.asdf.outputs.java }}
+    #     echo "distribution=$(echo $java | cut -d '-' -f 1)" >> $GITHUB_OUTPUT
+    #     echo "version=$(echo $java | cut -d '-' -f 2)" >> $GITHUB_OUTPUT
+    - uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73 # v4
+      with:
+        # distribution: ${{ steps.extract_distribution_and_version.outputs.distribution }}
+        distribution: temurin
+        # java-version: ${{ steps.extract_distribution_and_version.outputs.version }}
+        java-version: 17.0.12+7
+        cache: 'gradle'
