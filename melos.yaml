@@ -35,32 +35,46 @@ scripts:
     run: melos exec -c 1 -- flutter pub outdated
 
   fmt:
-    description: format
+    description: Format
     run: |
       melos fix && \
       melos fmt:dart
 
   fmt:dry:
-    description: format (dry-run)
+    description: Format (dry-run)
     run: |
       melos fix:dry && \
       melos fmt:dart:dry
 
   fmt:dart:
-    description: format dart
+    description: Format dart
     run: melos exec -c 1 --fail-fast -- dart format --enable-experiment=macros .
 
   fmt:dart:dry:
-    description: format dart (dry-run)
+    description: Format dart (dry-run)
     run: melos exec -c 1 --fail-fast -- dart format --set-exit-if-changed --enable-experiment=macros .
 
   fix:
-    description: fix dart
+    description: Fix dart
     run: melos exec -c 1 --fail-fast -- dart fix --apply --enable-experiment=macros
 
   fix:dry:
-    description: fix dart (dry-run)
+    description: Fix dart (dry-run)
     run: melos exec -c 1 --fail-fast -- dart fix --dry-run --enable-experiment=macros
+
+  lint:
+    description: Lint
+    run: |
+      melos lint:dart && \
+      melos lint:flutter
+
+  lint:dart:
+    description: Lint with dart
+    run: melos exec -c 1 --scope="thema" -- dart analyze --fatal-infos --fatal-warnings
+
+  lint:flutter:
+    description: Lint with flutter
+    run: melos exec -c 1 --scope="thema_test" -- flutter analyze --fatal-infos --fatal-warnings
 
   test:
     description: Run tests
@@ -69,15 +83,15 @@ scripts:
       dependsOn: flutter_test
 
   build:example:
-    description: build on thema_example
+    description: Build on thema_example
     run: |
       melos build:example:android && \
       melos build:example:ios
 
   build:example:android:
-    description: build android on thema_example
+    description: Build android on thema_example
     run: melos exec -c 1 --scope="thema_example" -- flutter build appbundle
 
   build:example:ios:
-    description: build ios on thema_example
+    description: Build ios on thema_example
     run: melos exec -c 1 --scope="thema_example" -- flutter build ios --no-codesign

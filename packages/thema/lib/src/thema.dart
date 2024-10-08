@@ -6,8 +6,10 @@ import 'package:macros/macros.dart';
 final _flutterMaterial = Uri.parse('package:flutter/material.dart');
 final _dartCore = Uri.parse('dart:core');
 
+/// A macro that generates a `ThemeExtension` class for a given class.
 macro class Thema
     implements ClassTypesMacro, ClassDeclarationsMacro, ClassDefinitionMacro {
+  /// Creates a new instance of `Thema`.
   const Thema();
 
   @override
@@ -16,6 +18,7 @@ macro class Thema
     ClassTypeBuilder builder,
   ) async {
     final superType =
+        // ignore: deprecated_member_use
         await builder.resolveIdentifier(_flutterMaterial, 'ThemeExtension');
     final superTypeCode = NamedTypeAnnotationCode(
       name: superType,
@@ -60,15 +63,17 @@ macro class Thema
     required MemberDeclarationBuilder builder,
   }) async {
     final fields = await builder.fieldsOf(clazz);
-    final hasUnexpectedFields = fields.any((field) =>
-        field.hasAbstract ||
-        field.hasConst ||
-        field.hasExternal ||
-        !field.hasFinal ||
-        field.hasInitializer ||
-        field.hasLate ||
-        field.hasStatic ||
-        field.type.isNullable);
+    final hasUnexpectedFields = fields.any(
+      (field) =>
+          field.hasAbstract ||
+          field.hasConst ||
+          field.hasExternal ||
+          !field.hasFinal ||
+          field.hasInitializer ||
+          field.hasLate ||
+          field.hasStatic ||
+          field.type.isNullable,
+    );
     if (hasUnexpectedFields) {
       builder.report(
         Diagnostic(
@@ -90,11 +95,13 @@ macro class Thema
   }) async {
     final fields = await builder.fieldsOf(clazz);
     final constructorParameterCodes = fields
-        .map((field) => RawCode.fromParts([
-              'required',
-              ' ',
-              field.identifier,
-            ]))
+        .map(
+          (field) => RawCode.fromParts([
+            'required',
+            ' ',
+            field.identifier,
+          ]),
+        )
         .toList();
     final constructorName = clazz.identifier.name;
     final constructorCode = DeclarationCode.fromParts(
@@ -135,6 +142,7 @@ macro class Thema
     required MemberDeclarationBuilder builder,
   }) async {
     final doubleIdentifier =
+        // ignore: deprecated_member_use
         await builder.resolveIdentifier(_dartCore, 'double');
     final leapFirstParameterCode = ParameterCode(
       keywords: ['covariant'],
@@ -181,24 +189,26 @@ macro class Thema
         return RawCode.fromParts([
           '$fieldName:',
           ' ',
-          '$fieldName',
+          fieldName,
           ' ?? ',
           field.identifier,
         ]);
       },
     ).toList();
-    final copyWithFunctionBodyCode = FunctionBodyCode.fromParts([
-      '{',
-      RawCode.fromParts([
-        'return',
-        ' ',
-        clazz.identifier,
-        '(',
-      ]).indent(size: 4),
-      ...instancePareterCodes.trailingComma().indent(size: 6),
-      ');'.indent(size: 4),
-      '}'.indent(),
-    ].joinAsCode('\n'));
+    final copyWithFunctionBodyCode = FunctionBodyCode.fromParts(
+      [
+        '{',
+        RawCode.fromParts([
+          'return',
+          ' ',
+          clazz.identifier,
+          '(',
+        ]).indent(size: 4),
+        ...instancePareterCodes.trailingComma().indent(size: 6),
+        ');'.indent(size: 4),
+        '}'.indent(),
+      ].joinAsCode('\n'),
+    );
 
     final builder =
         await typeDefinisionBuilder.buildMethod(copyWithDeclaration.identifier);
@@ -221,8 +231,10 @@ macro class Thema
       name: 'other',
     );
     final themeExtensionIdentifier = await typeDefinisionBuilder
+        // ignore: deprecated_member_use
         .resolveIdentifier(_flutterMaterial, 'ThemeExtension');
     final doubleIdentifier =
+        // ignore: deprecated_member_use
         await typeDefinisionBuilder.resolveIdentifier(_dartCore, 'double');
     final leapSecondParameterCode = ParameterCode(
       type: NamedTypeAnnotationCode(name: doubleIdentifier),
@@ -243,7 +255,8 @@ macro class Thema
               '$fieldName:',
               ' ',
               field.identifier,
-              '.lerp(${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})',
+              // ignore: lines_longer_than_80_chars
+              '.lerp(${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name},)',
             ],
           );
         }
@@ -254,28 +267,33 @@ macro class Thema
             fieldTypeCode,
             '.lerp(',
             field.identifier,
+            // ignore: lines_longer_than_80_chars
             ', ${leapFirstParameterCode.name}.$fieldName, ${leapSecondParameterCode.name})!',
           ],
         );
       }),
     );
-    final leapFunctionBodyCode = FunctionBodyCode.fromParts([
-      '{',
-      RawCode.fromParts([
-        'if (${leapFirstParameterCode.name} == null) {'.indent(size: 4),
-        'return this;'.indent(size: 6),
-        '}'.indent(size: 4),
-      ].joinAsCode('\n')),
-      RawCode.fromParts([
-        'return',
-        ' ',
-        clazz.identifier,
-        '(',
-      ]).indent(size: 4),
-      ...instancePareterCodes.trailingComma().indent(size: 6),
-      ');'.indent(size: 4),
-      '}'.indent(),
-    ].joinAsCode('\n'));
+    final leapFunctionBodyCode = FunctionBodyCode.fromParts(
+      [
+        '{',
+        RawCode.fromParts(
+          [
+            'if (${leapFirstParameterCode.name} == null) {'.indent(size: 4),
+            'return this;'.indent(size: 6),
+            '}'.indent(size: 4),
+          ].joinAsCode('\n'),
+        ),
+        RawCode.fromParts([
+          'return',
+          ' ',
+          clazz.identifier,
+          '(',
+        ]).indent(size: 4),
+        ...instancePareterCodes.trailingComma().indent(size: 6),
+        ');'.indent(size: 4),
+        '}'.indent(),
+      ].joinAsCode('\n'),
+    );
 
     final builder =
         await typeDefinisionBuilder.buildMethod(leapDeclaration.identifier);
@@ -294,12 +312,12 @@ extension _Indent<T extends Object> on T {
 
 extension _Indents<T extends Object> on List<T> {
   List<Code> indent({int size = 2}) {
-    return this.map((element) => element.indent(size: size)).toList();
+    return map((element) => element.indent(size: size)).toList();
   }
 }
 
 extension _Commas<T extends Object> on List<T> {
   List<Code> trailingComma() {
-    return this.map((element) => RawCode.fromParts([element, ','])).toList();
+    return map((element) => RawCode.fromParts([element, ','])).toList();
   }
 }
