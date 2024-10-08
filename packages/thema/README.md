@@ -1,39 +1,104 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+<div align="center">
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+# thema
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+thema reduces the boilerplate code required to create ThemeExtension classes with macros.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+</div>
 
-## Features
+> [!CAUTION]
+> This package is experimental because of [the Dart macro system][macro-spec] is currently under development.
+> DO NOT USE on production codes.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+[macro-spec]: https://github.com/dart-lang/language/blob/main/working/macros/feature-specification.md
 
-## Getting started
+---
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## Contents
+
+- [Requirements](#requirements)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Feature requests](#feature-requests)
+- [Bug reports](#bug-reports)
+
+## Requirements
+
+- Dart dev channel
+- Flutter master channel
+
+For more information, refer to the [Macros][macros] documentation.
+
+[macros]: https://dart.dev/language/macros
+
+## Setup
+
+1. Edit SDK constraints in `pubspec.yaml`:
+
+```yaml
+environment:
+  sdk: ">=3.6.0-0 <4.0.0"
+```
+
+2. Enable the experiment in `analysis_options.yaml`:
+
+```yaml
+analyzer:
+  enable-experiment:
+    - macros
+    - enhanced-parts
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Define a class with the `@Thema` annotation:
 
 ```dart
-const like = 'sample';
+@Thema()
+class ColorThemeExt {
+  final Color primaryColor;
+  final Color secondaryColor;
+  final Color accentColor;
+}
 ```
 
-## Additional information
+thema supports custom theme classes:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+class GradientColor {
+  // You should implement the `lerp` static method.
+  static GradientColor? lerp(GradientColor? a, GradientColor? b, double t) {
+    // ...
+  }
+}
+
+@Thema()
+class GradientColorThemeExt {
+  final GradientColor primaryGradient;
+  final GradientColor secondaryGradient;
+  final GradientColor accentGradient;
+}
+```
+
+thema also supports nested ThemeExtension classes:
+
+```dart
+@Thema()
+class AppThemeExt {
+  final ColorThemeExt color;
+  final GradientColorThemeExt gradientColor;
+}
+```
+
+## Feature requests
+
+If you have any feature requests, please create [an issue from this template](https://github.com/ronnnnn/thema/issues/new?&labels=feat&template=feat.yml).
+
+## Bug reports
+
+If you find any bugs, please create [an issue from this template](https://github.com/ronnnnn/thema/issues/new?&labels=bug&template=bug.yml).
+
+## Contributing
+
+Welcome your contributions!!
+Please read [CONTRIBUTING](https://github.com/ronnnnn/thema/blob/main/CONTRIBUTING.md) docs before submitting your PR.

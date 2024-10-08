@@ -7,7 +7,6 @@ packages:
 ide:
   intellij: true
 
-
 command:
   bootstrap:
     enforceLockfile: true
@@ -20,3 +19,21 @@ scripts:
   get:
     run: melos exec -c 1 -- flutter pub get
     description: Pub get
+
+  outdated:
+    run: melos exec -c 1 -- flutter pub outdated
+    description: Check for outdated dependencies
+
+  fmt:
+    run: melos exec -c 1 -- dart format --enable-experiment=macros  .
+    description: Format dart code
+
+  fix:
+    run: melos exec -c 1 -- dart fix --apply --enable-experiment=macros .
+    description: Fix dart code
+
+  test:
+    run: melos exec -c 1 -- flutter test --enable-experiment=macros
+    description: Run tests
+    packageFilters:
+      dependsOn: flutter_test

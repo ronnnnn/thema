@@ -1,0 +1,4 @@
+analyzer:
+  enable-experiment:
+    - macros
+    - enhanced-parts

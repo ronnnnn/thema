@@ -1,15 +1,27 @@
 name: thema
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+description: thema reduces the boilerplate code required to create ThemeExtension classes with macros.
+version: 0.1.0-dev.1
+homepage: https://github.com/ronnnnn/thema
+repository: https://github.com/ronnnnn/thema
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+funding:
+  - https://github.com/sponsors/ronnnnn
+topics:
+  - theme
+  - macros
 
 environment:
-  sdk: ^3.5.0-152
+  sdk: ">=3.6.0-0 <4.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  json: ^0.20.2
+  collection: ^1.18.0
+  macros: ^0.1.0
 
 dev_dependencies:
   flutter_test:
