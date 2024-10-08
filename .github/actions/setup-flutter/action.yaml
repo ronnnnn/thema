@@ -14,6 +14,9 @@ runs:
         channel: master
         # flutter-version: ${{ steps.versions.outputs.flutter }}
         cache: true
+    - name: Flutter update-packages
+      shell: bash
+      run: flutter update-packages
     - name: Extract Melos version from pubspec
       id: version
       uses: pietrobolcato/action-read-yaml@9f13718d61111b69f30ab4ac683e67a56d254e1d # v1.1.0
