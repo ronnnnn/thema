@@ -4,10 +4,18 @@
 
 thema reduces the boilerplate code required to create ThemeExtension classes with macros.
 
+[![check][badge-check]](https://github.com/ronnnnn/thema/actions/workflows/check.yaml)
+[![pub][badge-pub]](https://pub.dev/packages/thema)
+[![license][badge-license]](https://github.com/ronnnnn/thema/blob/main/packages/thema/LICENSE)
+
+[badge-check]: https://img.shields.io/github/actions/workflow/status/ronnnnn/thema/check.yaml?style=for-the-badge&logo=github%20actions&logoColor=%232088FF&color=gray&link=https%3A%2F%2Fgithub.com%2Fronnnnn%2Fthema%2Factions%2Fworkflows%2Fcheck.yaml
+[badge-pub]: https://img.shields.io/pub/v/thema?style=for-the-badge&logo=dart&logoColor=%230175C2&color=gray&link=https%3A%2F%2Fpub.dev%2Fpackages%2Fthema
+[badge-license]: https://img.shields.io/badge/license-mit-green?style=for-the-badge&logo=github&logoColor=%23181717&color=gray&link=https%3A%2F%2Fgithub.com%2Fronnnnn%2Fthema%2Fblob%2Fmain%2Fpackages%2Fthema%2FLICENSE
+
 </div>
 
 > [!CAUTION]
-> This package is experimental because of [the Dart macro system][macro-spec] is currently under development.
+> This package is experimental because [the Dart macro system][macro-spec] is currently under development.<br>
 > DO NOT USE on production codes.
 
 [macro-spec]: https://github.com/dart-lang/language/blob/main/working/macros/feature-specification.md
@@ -92,11 +100,11 @@ class AppThemeExt {
 
 ## Feature requests
 
-If you have any feature requests, please create [an issue from this template](https://github.com/ronnnnn/thema/issues/new?&labels=feat&template=feat.yml).
+If you have any feature requests, please create [an issue from this template](https://github.com/ronnnnn/thema/issues/new?&labels=feat&template=feat.yaml).
 
 ## Bug reports
 
-If you find any bugs, please create [an issue from this template](https://github.com/ronnnnn/thema/issues/new?&labels=bug&template=bug.yml).
+If you find any bugs, please create [an issue from this template](https://github.com/ronnnnn/thema/issues/new?&labels=bug&template=bug.yaml).
 
 ## Contributing
 

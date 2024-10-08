@@ -24,5 +24,4 @@ dependencies:
   macros: ^0.1.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  very_good_analysis: 6.0.0

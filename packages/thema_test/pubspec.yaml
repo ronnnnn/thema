@@ -1,6 +1,6 @@
-name: thema_example
-publish_to: "none"
-version: 1.0.0
+name: thema_test
+description: A new Flutter module project.
+publish_to: 'none'
 
 environment:
   sdk: ">=3.6.0-0 <4.0.0"
@@ -9,7 +9,9 @@ dependencies:
   flutter:
     sdk: flutter
   thema:
-    path: ..
+    path: ../thema
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   very_good_analysis: 6.0.0
