@@ -1,6 +1,8 @@
 {
   "packages": {
     "packages/thema": {
+      "prerelease-type": "dev",
+      "versioning": "prerelease",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
       "changelog-path": "CHANGELOG.md",
