@@ -59,7 +59,7 @@ environment:
 
 ```yaml
 dependencies:
-  thema: ^0.1.0-dev01
+  thema: <version>
 ```
 
 3. Enable the experiment in `analysis_options.yaml`:
