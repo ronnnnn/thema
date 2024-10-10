@@ -20,7 +20,14 @@ thema reduces the boilerplate code required to create ThemeExtension classes wit
 
 [macro-spec]: https://github.com/dart-lang/language/blob/main/working/macros/feature-specification.md
 
----
+<video src="https://github.com/user-attachments/assets/7bf466c9-f338-4e4b-bb12-f102142e1100" alt="thema demo"></video>
+
+| thema           | Traditional                 |
+| --------------- | --------------------------- |
+| ![thema][thema] | ![traditional][traditional] |
+
+[thema]: https://github.com/user-attachments/assets/6f206f00-26a5-4635-9022-1365a73f49aa
+[traditional]: https://github.com/user-attachments/assets/1849295f-06d0-43a9-a2b9-3b81a1636f0b
 
 ## Contents
 
