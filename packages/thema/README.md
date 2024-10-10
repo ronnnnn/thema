@@ -55,7 +55,14 @@ environment:
   sdk: ">=3.6.0-0 <4.0.0"
 ```
 
-2. Enable the experiment in `analysis_options.yaml`:
+2. Add the following dependencies to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  thema: ^0.1.0-dev01
+```
+
+3. Enable the experiment in `analysis_options.yaml`:
 
 ```yaml
 analyzer:
