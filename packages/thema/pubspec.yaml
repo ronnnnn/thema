@@ -1,6 +1,6 @@
 name: thema
 description: thema reduces the boilerplate code required to create ThemeExtension classes with macros.
-version: 0.1.0-dev01
+version: 0.1.0-dev02
 homepage: https://github.com/ronnnnn/thema
 repository: https://github.com/ronnnnn/thema
 platforms:

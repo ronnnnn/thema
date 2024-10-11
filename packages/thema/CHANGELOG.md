@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-dev02](https://github.com/ronnnnn/thema/compare/thema-v0.1.0-dev01...thema-v0.1.0-dev02) (2024-10-10)
+
+### Documentation
+
+- add dependencies in setup steps ([2abafc9](https://github.com/ronnnnn/thema/commit/2abafc9551ab11a000f0ee7c4f581a14ff8d1e59))
+- mask version ([756757d](https://github.com/ronnnnn/thema/commit/756757dd2fb95f5493248430f2099cf54ce8cf41))
+
 ## [0.1.0-dev01](https://github.com/ronnnnn/thema/releases/tag/thema-v0.1.0-dev01) (2024-10-10)
 
 ### Build System
