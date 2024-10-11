@@ -56,7 +56,7 @@
       "include-v-in-tag": true,
       "label": "release",
       "package-name": "thema",
-      "prerelease": false,
+      "prerelease": true,
       "pull-request-title-pattern": "release: ${component} ${version}",
       "release-label": "release",
       "release-type": "dart"
