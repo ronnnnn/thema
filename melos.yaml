@@ -24,7 +24,7 @@ command:
 scripts:
   prepare:
     description: Prepare for develop
-    run: dart pub global activate very_good_cli 0.23.1
+    run: dart pub global activate very_good_cli 0.28.0
 
   get:
     description: Pub get
