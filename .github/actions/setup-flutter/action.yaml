@@ -23,7 +23,7 @@ runs:
       with:
         config: ./pubspec.yaml
     - name: Download Melos and bootstrap
-      uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa # v3
+      uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5 # v3
       with:
         melos-version: ${{ steps.version.outputs.outputs['dev_dependencies']['melos'] }}
         run-bootstrap: true
